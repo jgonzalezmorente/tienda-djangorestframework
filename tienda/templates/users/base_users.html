@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block js %}
+
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        function login() {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyCQScP_NNNCPcn8vc9ufa3_m2edeNzWlYU",
+                authDomain: "djangopro-67e0b.firebaseapp.com",
+                projectId: "djangopro-67e0b",
+                storageBucket: "djangopro-67e0b.appspot.com",
+                messagingSenderId: "974654746811",
+                appId: "1:974654746811:web:aa2549cd93b480e9c7799e"
+            };
+
+            const app = firebase.initializeApp(firebaseConfig);
+
+            var provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth()
+                .signInWithPopup(provider)
+                .then((result) => {                    
+                    var credential = result.credential;
+                    var token = credential.idToken;
+                    var user = result.user;
+                    // Recuperar id token user
+                    user.getIdToken().then((idToken) => {                        
+                        console.log(idToken);
+                        var data = {
+                            token_id: idToken
+                        };
+                        axios.post('/api/google-login/', data).then(
+                            function( response ) {
+                                console.log( response );
+                            }
+                        );
+                    }).catch( (error) => console.log(error));
+
+                }).catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    var email = error.email;
+                    var credential = error.credential;
+                    console.log('====================================');
+                    console.log(error);
+                });
+        }
+    </script>
+
+{% endblock js %}
