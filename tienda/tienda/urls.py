@@ -21,4 +21,6 @@ urlpatterns = [
     path('', include('applications.users.urls')),
     path('', include('applications.producto.urls')),
     path('', include('applications.venta.urls')),
+    path('', include('applications.producto.routers')),
+    path('', include('applications.venta.routers')),
 ]
